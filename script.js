@@ -2,39 +2,42 @@ $(document).ready(function() {
 
 	let INTERVAL = 500;
 	let num = 1;
+	let ballSpawn;
 	let obstacles = [];
-	let star
-
-	function randomHexColor() {
+	
+	function randomHexColorNotWhite() {
 		let color = "#";
+		do {
 		for (let i = 0; i < 6; i++) {
 			color += "0123456789abcdef".charAt(Math.floor(Math.random() * 16));
 		}
+		} while (parseInt(color.substring(1, color.length)) > 0xcccccc);
 		return color;
 	}
 
 	function spawnBall() {
-
+		let endTime = performance.now();
 		$("body").append("<div class=ball></div>");
 
 		$(`.ball:nth-child(${num})`).on('mouseover', function(event) {
 			$(".ball").remove();
-			$("body").append(`<div>You made it to:<br>${num} dodgeballs<br></div>`);
-			alert("You lost!");
+			obstacles = [];
+			clearTimeout(ballSpawn);
+			$("body").append(`<div id=\"end\">You made it to:<br>${num} dodgeballs<br>${(endTime - startTime) / 1000} seconds</div>`);
 		});
 
 		obstacles.push($(`.ball:nth-child(${num})`));
 
 		let lastObstacleAdded = obstacles[obstacles.length-1]
 
-		lastObstacleAdded.css("background-color", randomHexColor());
+		lastObstacleAdded.css("background-color", randomHexColorNotWhite());
 		lastObstacleAdded.speedY = Math.random() + 1.5;
 		lastObstacleAdded.speedX = Math.random() + 1.5;
 
 		num++;
 
 		if (num < 100) {
-			setTimeout(spawnBall, INTERVAL);
+			ballSpawn = setTimeout(spawnBall, INTERVAL);
 		}
 
 	}
@@ -62,6 +65,7 @@ $(document).ready(function() {
 		}
 	}
 
+	let startTime = performance.now();
 	spawnBall();
 	setInterval(moveBalls, 5);
 });
