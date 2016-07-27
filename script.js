@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	let INTERVAL = 500;
-	let num = 1;
+	let num = 0;
 	let ballSpawn;
 	let obstacles = [];
 	
@@ -19,14 +19,14 @@ $(document).ready(function() {
 		let endTime = performance.now();
 		$("body").append("<div class=ball></div>");
 
-		$(`.ball:nth-child(${num})`).on('mouseover', function(event) {
+		$(`.ball:nth-child(${num + 1})`).on('mouseover', function(event) {
 			$(".ball").remove();
 			obstacles = [];
 			clearTimeout(ballSpawn);
 			$("body").append(`<div id=\"end\">You made it to:<br>${num} dodgeballs<br>${(endTime - startTime) / 1000} seconds</div>`);
 		});
 
-		obstacles.push($(`.ball:nth-child(${num})`));
+		obstacles.push($(`.ball:nth-child(${num + 1})`));
 
 		let lastObstacleAdded = obstacles[obstacles.length-1]
 
